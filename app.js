@@ -52,7 +52,56 @@ app.get("/details",async(req,res)=>{
         console.log(err);
     }
 
+});
+
+app.get("/edit/:id",async(req,res)=>{
+    const id = req.params.id;
+    CrudModel.findById(id, function (err, docs) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            console.log(docs);
+            console.log(req.params.id);
+            res.render('update',{
+                dataList:docs,
+                ide:req.params.id,
+            });   
+        }
+    });
+  
+});
+
+app.post("/edit/:id",async(req,res)=>{
+    try{
+    const result = await CrudModel.findByIdAndUpdate(req.params.id,req.body);
+    console.log(result);
+    console.log(req.body);
+    res.redirect('/details');
+    }
+    catch(err){
+    console.log(err);
+    }
 })
+
+app.get("/delete/:id",(req,res)=>{
+    const ids = req.params.id;
+    res.render('delete',{da:ids});
+})
+
+app.post("/delete/:id",async(req,res)=>{
+    try{
+        const resut = await CrudModel.findByIdAndDelete(req.params.id);
+        console.log(resut);
+        console.log("deleted");
+        res.redirect('/details');
+    }
+    catch(error){
+        console.log(error);
+    }
+
+})
+
 
 
 
